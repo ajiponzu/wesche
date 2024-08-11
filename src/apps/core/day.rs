@@ -1,21 +1,41 @@
 use super::task;
 
+#[derive(Debug, Clone, PartialEq)] // Add the PartialEq trait
+pub enum DayOfWeek {
+    Sunday,
+    Monday,
+    Tuesday,
+    Wednesday,
+    Thursday,
+    Friday,
+    Saturday,
+}
+
 #[derive(Debug)]
 pub struct Day {
-    date: chrono::naive::NaiveDate,
+    day_of_week: DayOfWeek,
     tasks: Vec<task::Task>,
 }
 
 impl Day {
-    pub fn new(date: chrono::naive::NaiveDate) -> Day {
+    pub fn new(day_of_week: &str) -> Day {
         Day {
-            date,
+            day_of_week: match day_of_week {
+                "Sunday" => DayOfWeek::Sunday,
+                "Monday" => DayOfWeek::Monday,
+                "Tuesday" => DayOfWeek::Tuesday,
+                "Wednesday" => DayOfWeek::Wednesday,
+                "Thursday" => DayOfWeek::Thursday,
+                "Friday" => DayOfWeek::Friday,
+                "Saturday" => DayOfWeek::Saturday,
+                _ => DayOfWeek::Sunday,
+            },
             tasks: Vec::new(),
         }
     }
 
-    pub fn get_date(self: &Day) -> String {
-        self.date.to_string()
+    pub fn get_day_of_week(self: &Day) -> Option<DayOfWeek> {
+        Some(self.day_of_week.clone())
     }
 
     pub fn get_tasks(self: &Day) -> &Vec<task::Task> {
@@ -33,11 +53,8 @@ mod tests {
 
     #[test]
     fn test_day() {
-        let day = Day {
-            date: chrono::naive::NaiveDate::parse_from_str("2021-01-01", "%Y-%m-%d").unwrap(),
-            tasks: Vec::new(),
-        };
+        let day = Day::new("Monday");
 
-        assert_eq!(day.get_date(), "2021-01-01");
+        assert_eq!(day.get_day_of_week().unwrap(), DayOfWeek::Monday);
     }
 }
