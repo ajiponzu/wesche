@@ -77,10 +77,6 @@ impl Engine {
         }
     }
 
-    fn add_day(self: &mut Engine, day: day::Day) {
-        self.schedule.add_day(day);
-    }
-
     async fn load_schedule(self: &mut Engine) -> std::io::Result<()> {
         let project_root_path = read_project_root_path();
 

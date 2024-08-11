@@ -13,11 +13,7 @@ impl Schedule {
     }
 
     pub fn get_days(self: &Schedule) -> &Vec<day::Day> {
-        &self.days
-    }
-
-    pub fn add_day(self: &mut Schedule, day: day::Day) {
-        self.days.push(day);
+        self.days.as_ref()
     }
 }
 
