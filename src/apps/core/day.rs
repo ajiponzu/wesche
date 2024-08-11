@@ -1,41 +1,23 @@
 use super::task;
 
-#[derive(Debug, Clone, PartialEq)] // Add the PartialEq trait
-pub enum DayOfWeek {
-    Sunday,
-    Monday,
-    Tuesday,
-    Wednesday,
-    Thursday,
-    Friday,
-    Saturday,
-}
+use serde::Deserialize;
 
-#[derive(Debug)]
+#[derive(Deserialize, Debug)]
 pub struct Day {
-    day_of_week: DayOfWeek,
+    day_of_week: String,
     tasks: Vec<task::Task>,
 }
 
 impl Day {
     pub fn new(day_of_week: &str) -> Day {
         Day {
-            day_of_week: match day_of_week {
-                "Sunday" => DayOfWeek::Sunday,
-                "Monday" => DayOfWeek::Monday,
-                "Tuesday" => DayOfWeek::Tuesday,
-                "Wednesday" => DayOfWeek::Wednesday,
-                "Thursday" => DayOfWeek::Thursday,
-                "Friday" => DayOfWeek::Friday,
-                "Saturday" => DayOfWeek::Saturday,
-                _ => DayOfWeek::Sunday,
-            },
+            day_of_week: day_of_week.to_string(),
             tasks: Vec::new(),
         }
     }
 
-    pub fn get_day_of_week(self: &Day) -> Option<DayOfWeek> {
-        Some(self.day_of_week.clone())
+    pub fn get_day_of_week(self: &Day) -> &str {
+        &self.day_of_week.as_str()
     }
 
     pub fn get_tasks(self: &Day) -> &Vec<task::Task> {
@@ -55,6 +37,6 @@ mod tests {
     fn test_day() {
         let day = Day::new("Monday");
 
-        assert_eq!(day.get_day_of_week().unwrap(), DayOfWeek::Monday);
+        assert_eq!(day.get_day_of_week(), "Monday");
     }
 }

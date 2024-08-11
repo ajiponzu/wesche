@@ -1,0 +1,66 @@
+{
+  "days": [
+    {
+      "day_of_week": "Monday",
+      "tasks": [
+        {
+          "title": "Team Meeting",
+          "start_time": "09:00:00",
+          "end_time": "10:00:00",
+          "details": "Discuss project updates and next steps."
+        },
+        {
+          "title": "Code Review",
+          "start_time": "11:00:00",
+          "end_time": "12:00:00",
+          "details": "Review pull requests in the main repository."
+        }
+      ]
+    },
+    {
+      "day_of_week": "Tuesday",
+      "tasks": [
+        {
+          "title": "Client Call",
+          "start_time": "14:00:00",
+          "end_time": "15:00:00",
+          "details": "Call with the client to discuss requirements."
+        }
+      ]
+    },
+    {
+      "day_of_week": "Wednesday",
+      "tasks": []
+    },
+    {
+      "day_of_week": "Thursday",
+      "tasks": [
+        {
+          "title": "Workshop Preparation",
+          "start_time": "13:00:00",
+          "end_time": "16:00:00",
+          "details": "Prepare materials for the upcoming workshop."
+        }
+      ]
+    },
+    {
+      "day_of_week": "Friday",
+      "tasks": [
+        {
+          "title": "Weekly Wrap-up",
+          "start_time": "17:00:00",
+          "end_time": "18:00:00",
+          "details": "Summarize the week's accomplishments and plan for next week."
+        }
+      ]
+    },
+    {
+      "day_of_week": "Saturday",
+      "tasks": []
+    },
+    {
+      "day_of_week": "Sunday",
+      "tasks": []
+    }
+  ]
+}
