@@ -133,7 +133,7 @@ pub trait AsyncLoopInterface {
     async fn async_loop(&self);
 }
 
-const NOTIFICATION_CHECK_INTERVAL: u16 = 1;
+const NOTIFICATION_CHECK_INTERVAL: u16 = 100;
 
 impl AsyncLoopInterface for Arc<Mutex<Application>> {
     async fn async_loop(&self) {
