@@ -1,11 +1,12 @@
 use super::core::schedule;
 use super::core::schedule::Schedule;
 use super::core::task;
+use super::view::window;
 
 use async_std::fs::File;
 use async_std::path::Path;
-use async_std::prelude::*;
 use async_std::sync::Mutex;
+use async_std::{io, prelude::*};
 use chrono::Local;
 use notify_rust::Notification;
 use std::env;
@@ -17,6 +18,8 @@ const SCHEDULE_FILE_PATH: &str = if cfg!(test) {
 } else {
     "assets/schedule.json"
 };
+
+const ICON_FILE_PATH: &str = "assets/icon.ico";
 
 fn read_project_root_path() -> String {
     if let Ok(project_root_path) = env::var("PROJECT_ROOT") {
@@ -36,6 +39,7 @@ pub struct Application {
     schedule: schedule::Schedule,
     finished_task_map: std::collections::HashMap<usize, AtomicBool>,
     is_shutdown: AtomicBool,
+    is_opened_viewer: AtomicBool,
 }
 
 impl Application {
@@ -44,6 +48,7 @@ impl Application {
             schedule: Schedule::new(),
             finished_task_map: std::collections::HashMap::new(),
             is_shutdown: AtomicBool::new(false),
+            is_opened_viewer: AtomicBool::new(false),
         }
     }
 
@@ -51,7 +56,7 @@ impl Application {
         let project_root_path = read_project_root_path();
 
         let file_path = Path::new(&project_root_path).join(SCHEDULE_FILE_PATH);
-        let mut file = File::open(&file_path).await?;
+        let mut file = File::open(file_path).await?;
 
         let mut contents = String::new();
 
@@ -70,10 +75,24 @@ impl Application {
         self.is_shutdown.store(true, Ordering::Relaxed);
     }
 
-    pub fn open_schedule_viewer(self: &Application) {
-        if cfg!(debug_assertions) {
-            dbg!("Setting window is opened");
-        }
+    pub fn check_opened_viewer(self: &Application) -> bool {
+        self.is_opened_viewer.load(Ordering::Relaxed)
+    }
+
+    pub fn open_viewer(self: &mut Application) {
+        self.is_opened_viewer.store(true, Ordering::Relaxed);
+    }
+
+    pub fn close_viewer(self: &mut Application) {
+        self.is_opened_viewer.store(false, Ordering::Relaxed);
+    }
+
+    pub fn get_icon_file_path(self: &Application) -> String {
+        Path::new(&read_project_root_path())
+            .join(ICON_FILE_PATH)
+            .to_str()
+            .expect("Failed to convert path to string")
+            .to_string()
     }
 
     pub fn check_notifications(self: &mut Application) {
@@ -131,6 +150,7 @@ impl Application {
 
 pub trait AsyncLoopInterface {
     async fn async_loop(&self);
+    async fn wait_for_open_viewer(&self);
 }
 
 const NOTIFICATION_CHECK_INTERVAL: u16 = 100;
@@ -148,6 +168,31 @@ impl AsyncLoopInterface for Arc<Mutex<Application>> {
             .await;
 
             self.lock().await.check_notifications();
+        }
+    }
+
+    async fn wait_for_open_viewer(&self) {
+        loop {
+            if self.lock().await.check_shutdown() {
+                return;
+            }
+            if !(self.lock().await.check_opened_viewer()) {
+                continue;
+            }
+
+            async_std::task::sleep(std::time::Duration::from_millis(
+                NOTIFICATION_CHECK_INTERVAL.into(),
+            ))
+            .await;
+
+            {
+                static WINDOW_TITLE: &str = "weshce -- schedule viewer";
+                static WINDOW_SIZE: (f64, f64) = (800.0, 600.0);
+
+                window::open_window(WINDOW_TITLE, WINDOW_SIZE);
+            }
+
+            self.lock().await.close_viewer();
         }
     }
 }
