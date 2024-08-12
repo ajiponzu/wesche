@@ -130,13 +130,13 @@ impl Application {
 }
 
 pub trait AsyncLoopInterface {
-    async fn run(&self);
+    async fn async_loop(&self);
 }
 
 const NOTIFICATION_CHECK_INTERVAL: u16 = 1;
 
 impl AsyncLoopInterface for Arc<Mutex<Application>> {
-    async fn run(&self) {
+    async fn async_loop(&self) {
         loop {
             if self.lock().await.check_shutdown() {
                 return;

@@ -9,22 +9,22 @@ mod apps;
 
 #[async_std::main]
 async fn main() -> std::io::Result<()> {
-    let engine = Arc::new(Mutex::new(controller::Application::new()));
+    let application_controller = Arc::new(Mutex::new(controller::Application::new()));
 
     {
-        let mut engine = engine.lock().await;
-        engine.load_schedule().await?;
+        let mut application_controller = application_controller.lock().await;
+        application_controller.load_schedule().await?;
     }
 
-    let engine_handle = {
-        let engine = engine.clone();
-        task::spawn(async move { engine.run().await })
+    let application_loop_handle = {
+        let application_controller = application_controller.clone();
+        task::spawn(async move { application_controller.async_loop().await })
     };
 
     task::sleep(Duration::from_secs(1)).await;
-    engine.lock().await.shutdown();
+    application_controller.lock().await.shutdown();
 
-    engine_handle.await; // runタスクの終了を待つ
+    application_loop_handle.await;
 
     Ok(())
 }
