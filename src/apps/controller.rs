@@ -7,7 +7,7 @@ use async_std::fs::File;
 use async_std::path::Path;
 use async_std::prelude::*;
 use async_std::sync::Mutex;
-use chrono::Local;
+use chrono::{Datelike, Local};
 use notify_rust::Notification;
 use std::env;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -100,9 +100,33 @@ impl Application {
     }
 
     pub fn check_notifications(self: &mut Application) {
-        let current_time = Local::now().time();
+        let (current_time, current_day_of_week_string) = {
+            let current_chrono = Local::now();
+            let current_time = current_chrono.time();
+            let current_day_of_week = current_chrono.weekday();
+
+            let current_day_of_week_string = match current_day_of_week {
+                chrono::Weekday::Mon => String::from("Monday"),
+                chrono::Weekday::Tue => String::from("Tuesday"),
+                chrono::Weekday::Wed => String::from("Wednesday"),
+                chrono::Weekday::Thu => String::from("Thursday"),
+                chrono::Weekday::Fri => String::from("Friday"),
+                chrono::Weekday::Sat => String::from("Saturday"),
+                chrono::Weekday::Sun => String::from("Sunday"),
+            };
+
+            (current_time, current_day_of_week_string)
+        };
 
         for day in self.schedule.get_days() {
+            if day.get_day_of_week() != current_day_of_week_string {
+                if cfg!(debug_assertions) {
+                    dbg!(day.get_day_of_week());
+                    dbg!(current_day_of_week_string.as_str());
+                }
+                continue;
+            }
+
             for task in day.get_tasks() {
                 if cfg!(debug_assertions) {
                     dbg!(task.get_title());

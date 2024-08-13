@@ -30,7 +30,14 @@
     },
     {
       "day_of_week": "Wednesday",
-      "tasks": []
+      "tasks": [
+        {
+          "title": "Default Task",
+          "start_time": "00:00:00",
+          "end_time": "01:00:00",
+          "details": "This is a default task."
+        }
+      ]
     },
     {
       "day_of_week": "Thursday",
@@ -56,11 +63,25 @@
     },
     {
       "day_of_week": "Saturday",
-      "tasks": []
+      "tasks": [
+        {
+          "title": "Default Task",
+          "start_time": "00:00:00",
+          "end_time": "01:00:00",
+          "details": "This is a default task."
+        }
+      ]
     },
     {
       "day_of_week": "Sunday",
-      "tasks": []
+      "tasks": [
+        {
+          "title": "Default Task",
+          "start_time": "00:00:00",
+          "end_time": "01:00:00",
+          "details": "This is a default task."
+        }
+      ]
     }
   ]
 }
