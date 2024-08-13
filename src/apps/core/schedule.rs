@@ -2,7 +2,7 @@ use super::day;
 
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Clone, Debug)]
 pub struct Schedule {
     days: Vec<day::Day>,
 }

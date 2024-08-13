@@ -2,7 +2,7 @@ use super::task;
 
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Clone, Debug)]
 pub struct Day {
     day_of_week: String,
     tasks: Vec<task::Task>,

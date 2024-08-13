@@ -5,8 +5,8 @@ use super::view::window;
 
 use async_std::fs::File;
 use async_std::path::Path;
+use async_std::prelude::*;
 use async_std::sync::Mutex;
-use async_std::{io, prelude::*};
 use chrono::Local;
 use notify_rust::Notification;
 use std::env;
@@ -50,6 +50,10 @@ impl Application {
             is_shutdown: AtomicBool::new(false),
             is_opened_viewer: AtomicBool::new(false),
         }
+    }
+
+    pub fn get_schedule(self: &Application) -> &Schedule {
+        &self.schedule
     }
 
     pub async fn load_schedule(self: &mut Application) -> std::io::Result<()> {
@@ -106,21 +110,28 @@ impl Application {
 
                 let task_memory_address = task.get_memory_address();
 
-                if self.finished_task_map.contains_key(&task_memory_address) {
+                if self.finished_task_map.contains_key(&task_memory_address)
+                    && self.finished_task_map[&task_memory_address].load(Ordering::Relaxed)
+                {
                     continue;
                 }
 
                 let (is_converted, task_start_time, task_end_time) = task.get_time_range();
 
-                if !is_converted || current_time < task_start_time || current_time > task_end_time {
+                if !is_converted || current_time < task_start_time {
                     self.finished_task_map
-                        .insert(task_memory_address, AtomicBool::new(true));
+                        .insert(task_memory_address, AtomicBool::new(false));
+                    continue;
+                }
+
+                self.finished_task_map
+                    .insert(task_memory_address, AtomicBool::new(true));
+
+                if current_time > task_end_time {
                     continue;
                 }
 
                 self.notify_task(task);
-                self.finished_task_map
-                    .insert(task_memory_address, AtomicBool::new(false));
             }
         }
     }
@@ -189,7 +200,8 @@ impl AsyncLoopInterface for Arc<Mutex<Application>> {
                 static WINDOW_TITLE: &str = "weshce -- schedule viewer";
                 static WINDOW_SIZE: (f64, f64) = (800.0, 600.0);
 
-                window::open_window(WINDOW_TITLE, WINDOW_SIZE);
+                let schedule_clone = self.lock().await.get_schedule().clone();
+                window::open_window(WINDOW_TITLE, WINDOW_SIZE, schedule_clone);
             }
 
             self.lock().await.close_viewer();

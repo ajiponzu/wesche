@@ -1,7 +1,7 @@
 use chrono::NaiveTime;
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Clone, Debug)]
 pub struct Task {
     title: String,
     start_time: String,

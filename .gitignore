@@ -1,2 +1,3 @@
 /target
 .vscode
+src/apps/view/druid_idea.rs
