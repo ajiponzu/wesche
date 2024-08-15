@@ -12,7 +12,7 @@ impl Schedule {
         Schedule { days: Vec::new() }
     }
 
-    pub fn get_days(self: &Schedule) -> &Vec<day::Day> {
+    pub fn get_days(&self) -> &Vec<day::Day> {
         self.days.as_ref()
     }
 }

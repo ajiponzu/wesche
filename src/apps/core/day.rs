@@ -9,11 +9,11 @@ pub struct Day {
 }
 
 impl Day {
-    pub fn get_day_of_week(self: &Day) -> &str {
+    pub fn get_day_of_week(&self) -> &str {
         self.day_of_week.as_str()
     }
 
-    pub fn get_tasks(self: &Day) -> &Vec<task::Task> {
+    pub fn get_tasks(&self) -> &Vec<task::Task> {
         self.tasks.as_ref()
     }
 }

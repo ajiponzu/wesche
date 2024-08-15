@@ -112,11 +112,11 @@ impl Application {
         }
     }
 
-    pub fn get_schedule(self: &Application) -> Arc<Mutex<Schedule>> {
+    pub fn get_schedule(&self) -> Arc<Mutex<Schedule>> {
         self.schedule.clone()
     }
 
-    pub async fn load_schedule(self: &mut Application) -> std::io::Result<()> {
+    pub async fn load_schedule(&mut self) -> std::io::Result<()> {
         let project_root_path = read_project_root_path();
 
         let file_path = Path::new(&project_root_path).join(SCHEDULE_FILE_PATH);
@@ -136,31 +136,31 @@ impl Application {
         Ok(())
     }
 
-    pub async fn start_observer(self: &mut Application) -> std::io::Result<()> {
+    pub async fn start_observer(&mut self) -> std::io::Result<()> {
         self.file_observer.observe_file().await
     }
 
-    pub fn check_shutdown(self: &Application) -> bool {
+    pub fn check_shutdown(&self) -> bool {
         self.is_shutdown.load(Ordering::Relaxed)
     }
 
-    pub fn shutdown(self: &mut Application) {
+    pub fn shutdown(&mut self) {
         self.is_shutdown.store(true, Ordering::Relaxed);
     }
 
-    pub fn check_opened_viewer(self: &Application) -> bool {
+    pub fn check_opened_viewer(&self) -> bool {
         self.is_opened_viewer.load(Ordering::Relaxed)
     }
 
-    pub fn open_viewer(self: &mut Application) {
+    pub fn open_viewer(&mut self) {
         self.is_opened_viewer.store(true, Ordering::Relaxed);
     }
 
-    pub fn close_viewer(self: &mut Application) {
+    pub fn close_viewer(&mut self) {
         self.is_opened_viewer.store(false, Ordering::Relaxed);
     }
 
-    pub fn get_icon_file_path(self: &Application) -> String {
+    pub fn get_icon_file_path(&self) -> String {
         Path::new(&read_project_root_path())
             .join(ICON_FILE_PATH)
             .to_str()
@@ -200,7 +200,7 @@ impl Application {
         }
     }
 
-    pub async fn check_notifications(self: &mut Application) {
+    pub async fn check_notifications(&mut self) {
         let (current_time, current_day_of_week_string) = {
             let current_chrono = Local::now();
             let current_time = current_chrono.time();
@@ -261,7 +261,7 @@ impl Application {
         }
     }
 
-    fn notify_task(self: &Application, task: &task::Task) {
+    fn notify_task(&self, task: &task::Task) {
         if cfg!(debug_assertions) {
             dbg!(task.get_title());
         }

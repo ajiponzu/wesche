@@ -10,30 +10,30 @@ pub struct Task {
 }
 
 impl Task {
-    pub fn get_title(self: &Task) -> &str {
+    pub fn get_title(&self) -> &str {
         self.title.as_str()
     }
 
-    pub fn get_start_time(self: &Task) -> &str {
+    pub fn get_start_time(&self) -> &str {
         self.start_time.as_str()
     }
 
-    pub fn get_end_time(self: &Task) -> &str {
+    pub fn get_end_time(&self) -> &str {
         self.end_time.as_str()
     }
 
-    pub fn get_details(self: &Task) -> &str {
+    pub fn get_details(&self) -> &str {
         self.details.as_str()
     }
 
-    pub fn get_time_range(self: &Task) -> (bool, NaiveTime, NaiveTime) {
+    pub fn get_time_range(&self) -> (bool, NaiveTime, NaiveTime) {
         let (is_converted_start, start_time) = Task::convert_string_to_time(self.get_start_time());
         let (is_converted_end, end_time) = Task::convert_string_to_time(self.get_end_time());
 
         (is_converted_start && is_converted_end, start_time, end_time)
     }
 
-    pub fn get_memory_address(self: &Task) -> usize {
+    pub fn get_memory_address(&self) -> usize {
         self as *const _ as usize
     }
 
