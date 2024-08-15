@@ -156,7 +156,7 @@ fn build_today_ui(selected_day_index: usize) -> impl Widget<App> {
         )
         .with_child(
             Flex::row()
-                .with_child(Flex::column().fix_width(65.0).expand_height())
+                .with_child(Flex::column().fix_width(100.0).expand_height())
                 .with_child(
                     List::new(|| {
                         Flex::column()
@@ -187,7 +187,7 @@ fn build_today_ui(selected_day_index: usize) -> impl Widget<App> {
                                 .padding(5.0),
                             )
                             .center()
-                            .fix_size(600.0, 120.0)
+                            .fix_size(560.0, 120.0)
                             .background(Color::rgba8(255, 255, 255, 230))
                             .on_click(|_event, task: &mut TaskForDruid, _env| {
                                 task.is_clicked = true;
@@ -205,9 +205,10 @@ fn build_today_ui(selected_day_index: usize) -> impl Widget<App> {
                                 app.selected_task = selected_task;
                             }
                         },
-                    )),
+                    ))
+                    .fix_size(560.0, 600.0),
                 )
-                .with_child(Flex::column().fix_width(45.0).expand_height())
+                .with_child(Flex::column().fix_width(80.0).expand_height())
                 .scroll()
                 .vertical(),
         )
