@@ -206,11 +206,12 @@ fn build_today_ui(selected_day_index: usize) -> impl Widget<App> {
                             }
                         },
                     ))
-                    .fix_size(560.0, 600.0),
+                    .fix_width(560.0),
                 )
                 .with_child(Flex::column().fix_width(80.0).expand_height())
                 .scroll()
-                .vertical(),
+                .vertical()
+                .expand_height(),
         )
         .background(Color::rgba8(250, 240, 220, 180))
 }
