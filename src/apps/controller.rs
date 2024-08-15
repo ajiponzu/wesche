@@ -201,29 +201,18 @@ impl Application {
     }
 
     pub async fn check_notifications(&mut self) {
-        let (current_time, current_day_of_week_string) = {
+        let (current_time, current_day_of_week) = {
             let current_chrono = Local::now();
             let current_time = current_chrono.time();
-            let current_day_of_week = current_chrono.weekday();
 
-            let current_day_of_week_string = match current_day_of_week {
-                chrono::Weekday::Mon => String::from("Monday"),
-                chrono::Weekday::Tue => String::from("Tuesday"),
-                chrono::Weekday::Wed => String::from("Wednesday"),
-                chrono::Weekday::Thu => String::from("Thursday"),
-                chrono::Weekday::Fri => String::from("Friday"),
-                chrono::Weekday::Sat => String::from("Saturday"),
-                chrono::Weekday::Sun => String::from("Sunday"),
-            };
-
-            (current_time, current_day_of_week_string)
+            (current_time, current_chrono.weekday())
         };
 
         for day in self.schedule.lock().await.get_days() {
-            if day.get_day_of_week() != current_day_of_week_string {
+            if !day.compare_day_of_week(&current_day_of_week) {
                 if cfg!(debug_assertions) {
                     dbg!(day.get_day_of_week());
-                    dbg!(current_day_of_week_string.as_str());
+                    dbg!(current_day_of_week.to_string());
                 }
                 continue;
             }
@@ -275,9 +264,17 @@ impl Application {
         #[cfg(target_os = "windows")]
         static SOUND_NAME: &str = "Mail";
 
+        let notification_summary = format!("★ {}", task.get_title());
+        let notification_body = format!(
+            "⌛ {} -- {} \n📖 {}",
+            task.get_start_time(),
+            task.get_end_time(),
+            task.get_details()
+        );
+
         Notification::new()
-            .summary(task.get_title())
-            .body(task.get_details())
+            .summary(&notification_summary)
+            .body(&notification_body)
             .sound_name(SOUND_NAME)
             .show()
             .unwrap();

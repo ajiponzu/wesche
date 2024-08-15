@@ -1,74 +1,435 @@
 {
   "days": [
     {
-      "day_of_week": "Monday",
+      "day_of_week": "月曜日",
       "tasks": [
         {
-          "title": "Team Meeting",
+          "title": "お弁当準備",
+          "start_time": "05:30:00",
+          "end_time": "06:30:00",
+          "details": "鶏の照り焼き弁当：鶏の照り焼き、ほうれん草のおひたし、玄米ご飯。"
+        },
+        {
+          "title": "夕食準備",
+          "start_time": "17:30:00",
+          "end_time": "18:00:00",
+          "details": "健康的な夕食を準備: グリルチキンと蒸し野菜。"
+        },
+        {
+          "title": "夕食",
+          "start_time": "18:00:00",
+          "end_time": "18:30:00",
+          "details": "夕食を楽しむ。"
+        },
+        {
+          "title": "運動",
+          "start_time": "19:00:00",
+          "end_time": "19:35:00",
+          "details": "フィットボクシング"
+        },
+        {
+          "title": "ゲーム休憩",
+          "start_time": "19:35:00",
+          "end_time": "20:35:00",
+          "details": "リラックスのためのゲーム。"
+        },
+        {
+          "title": "Rustプログラミングの勉強",
+          "start_time": "20:35:00",
+          "end_time": "21:30:00",
+          "details": "Rustのプログラミング演習を行う。"
+        },
+        {
+          "title": "入浴",
+          "start_time": "21:30:00",
+          "end_time": "22:00:00",
+          "details": "リラックスするために入浴。"
+        },
+        {
+          "title": "昇進試験の勉強",
+          "start_time": "22:00:00",
+          "end_time": "22:30:00",
+          "details": "昇進試験のための勉強。"
+        }
+      ]
+    },
+    {
+      "day_of_week": "火曜日",
+      "tasks": [
+        {
+          "title": "お弁当準備",
+          "start_time": "05:30:00",
+          "end_time": "06:30:00",
+          "details": "サーモンの塩焼き弁当：サーモンの塩焼き、きんぴらごぼう、白米。"
+        },
+        {
+          "title": "夕食準備",
+          "start_time": "17:30:00",
+          "end_time": "18:00:00",
+          "details": "夕食を準備: サーモンとキヌアサラダ。"
+        },
+        {
+          "title": "夕食",
+          "start_time": "18:00:00",
+          "end_time": "18:30:00",
+          "details": "夕食を楽しむ。"
+        },
+        {
+          "title": "運動",
+          "start_time": "19:00:00",
+          "end_time": "19:35:00",
+          "details": "フィットボクシング"
+        },
+        {
+          "title": "ゲーム休憩",
+          "start_time": "19:35:00",
+          "end_time": "20:35:00",
+          "details": "リラックスのためのゲーム。"
+        },
+        {
+          "title": "力学の勉強",
+          "start_time": "20:35:00",
+          "end_time": "21:30:00",
+          "details": "力学の概念を復習。"
+        },
+        {
+          "title": "入浴",
+          "start_time": "21:30:00",
+          "end_time": "22:00:00",
+          "details": "リラックスするために入浴。"
+        },
+        {
+          "title": "Rustプログラミングの勉強",
+          "start_time": "22:00:00",
+          "end_time": "22:30:00",
+          "details": "Rustのプログラミングを続ける。"
+        }
+      ]
+    },
+    {
+      "day_of_week": "水曜日",
+      "tasks": [
+        {
+          "title": "お弁当準備",
+          "start_time": "05:30:00",
+          "end_time": "06:30:00",
+          "details": "豚の生姜焼き弁当：豚の生姜焼き、卵焼き、玄米ご飯。"
+        },
+        {
+          "title": "夕食準備",
+          "start_time": "17:30:00",
+          "end_time": "18:00:00",
+          "details": "夕食を準備: 豆腐の野菜炒め。"
+        },
+        {
+          "title": "夕食",
+          "start_time": "18:00:00",
+          "end_time": "18:30:00",
+          "details": "夕食を楽しむ。"
+        },
+        {
+          "title": "運動",
+          "start_time": "19:00:00",
+          "end_time": "19:35:00",
+          "details": "フィットボクシング"
+        },
+        {
+          "title": "ゲーム休憩",
+          "start_time": "19:35:00",
+          "end_time": "20:35:00",
+          "details": "リラックスのためのゲーム。"
+        },
+        {
+          "title": "昇進試験の勉強",
+          "start_time": "20:35:00",
+          "end_time": "21:30:00",
+          "details": "重要なトピックに集中する。"
+        },
+        {
+          "title": "入浴",
+          "start_time": "21:30:00",
+          "end_time": "22:00:00",
+          "details": "リラックスするために入浴。"
+        },
+        {
+          "title": "力学の勉強",
+          "start_time": "22:00:00",
+          "end_time": "22:30:00",
+          "details": "力学の問題に取り組む。"
+        }
+      ]
+    },
+    {
+      "day_of_week": "木曜日",
+      "tasks": [
+        {
+          "title": "お弁当準備",
+          "start_time": "05:30:00",
+          "end_time": "06:30:00",
+          "details": "チキンカツ弁当：チキンカツ、ポテトサラダ、白米。"
+        },
+        {
+          "title": "夕食準備",
+          "start_time": "17:30:00",
+          "end_time": "18:00:00",
+          "details": "夕食を準備: 野菜カレーと玄米。"
+        },
+        {
+          "title": "夕食",
+          "start_time": "18:00:00",
+          "end_time": "18:30:00",
+          "details": "夕食を楽しむ。"
+        },
+        {
+          "title": "運動",
+          "start_time": "19:00:00",
+          "end_time": "19:35:00",
+          "details": "フィットボクシング"
+        },
+        {
+          "title": "ゲーム休憩",
+          "start_time": "19:35:00",
+          "end_time": "20:35:00",
+          "details": "リラックスのためのゲーム。"
+        },
+        {
+          "title": "Rustプログラミングの勉強",
+          "start_time": "20:35:00",
+          "end_time": "21:30:00",
+          "details": "Rustの練習をする。"
+        },
+        {
+          "title": "入浴",
+          "start_time": "21:30:00",
+          "end_time": "22:00:00",
+          "details": "リラックスするために入浴。"
+        },
+        {
+          "title": "昇進試験の勉強",
+          "start_time": "22:00:00",
+          "end_time": "22:30:00",
+          "details": "昇進試験のための勉強。"
+        }
+      ]
+    },
+    {
+      "day_of_week": "金曜日",
+      "tasks": [
+        {
+          "title": "お弁当準備",
+          "start_time": "03:30:00",
+          "end_time": "06:30:00",
+          "details": "焼き魚弁当：焼き魚、ひじき煮、玄米ご飯。"
+        },
+        {
+          "title": "夕食準備",
+          "start_time": "17:30:00",
+          "end_time": "18:00:00",
+          "details": "夕食を準備: トマトソースのパスタとサラダ。"
+        },
+        {
+          "title": "夕食",
+          "start_time": "18:00:00",
+          "end_time": "18:30:00",
+          "details": "夕食を楽しむ。"
+        },
+        {
+          "title": "運動",
+          "start_time": "19:00:00",
+          "end_time": "19:35:00",
+          "details": "フィットボクシング"
+        },
+        {
+          "title": "ゲーム休憩",
+          "start_time": "19:35:00",
+          "end_time": "20:35:00",
+          "details": "リラックスのためのゲーム。"
+        },
+        {
+          "title": "力学の勉強",
+          "start_time": "20:35:00",
+          "end_time": "21:30:00",
+          "details": "力学のトピックを深く掘り下げる。"
+        },
+        {
+          "title": "入浴",
+          "start_time": "21:30:00",
+          "end_time": "22:00:00",
+          "details": "リフレッシュのために入浴。"
+        },
+        {
+          "title": "Rustプログラミングの勉強",
+          "start_time": "22:00:00",
+          "end_time": "22:30:00",
+          "details": "Rustの学習を続ける。"
+        }
+      ]
+    },
+    {
+      "day_of_week": "土曜日",
+      "tasks": [
+        {
+          "title": "朝の運動",
+          "start_time": "05:30:00",
+          "end_time": "06:05:00",
+          "details": "朝のランニング。"
+        },
+        {
+          "title": "朝食準備",
+          "start_time": "07:00:00",
+          "end_time": "07:30:00",
+          "details": "健康的な朝食を準備: フルーツ入りオートミール。"
+        },
+        {
+          "title": "朝食",
+          "start_time": "07:30:00",
+          "end_time": "08:00:00",
+          "details": "朝食を楽しむ。"
+        },
+        {
+          "title": "買い物",
           "start_time": "09:00:00",
-          "end_time": "10:00:00",
-          "details": "Discuss project updates and next steps."
-        }
-      ]
-    },
-    {
-      "day_of_week": "Tuesday",
-      "tasks": [
+          "end_time": "10:30:00",
+          "details": "週末の食材を買いに行く。"
+        },
         {
-          "title": "Client Call",
-          "start_time": "14:00:00",
-          "end_time": "15:00:00",
-          "details": "Call with the client to discuss requirements."
-        }
-      ]
-    },
-    {
-      "day_of_week": "Wednesday",
-      "tasks": [
+          "title": "昇進試験の勉強",
+          "start_time": "11:00:00",
+          "end_time": "13:00:00",
+          "details": "試験準備に集中。"
+        },
         {
-          "title": "Default Task",
-          "start_time": "00:00:00",
-          "end_time": "01:00:00",
-          "details": "This is a default task."
-        }
-      ]
-    },
-    {
-      "day_of_week": "Thursday",
-      "tasks": [
+          "title": "昼食準備",
+          "start_time": "12:30:00",
+          "end_time": "13:00:00",
+          "details": "昼食を準備: グリル魚とご飯。"
+        },
         {
-          "title": "Workshop Preparation",
+          "title": "昼食",
           "start_time": "13:00:00",
-          "end_time": "20:00:00",
-          "details": "Prepare materials for the upcoming workshop."
+          "end_time": "13:30:00",
+          "details": "昼食を楽しむ。"
+        },
+        {
+          "title": "Rustプログラミングの勉強",
+          "start_time": "14:00:00",
+          "end_time": "16:00:00",
+          "details": "Rustプロジェクトに取り組む。"
+        },
+        {
+          "title": "ゲーム休憩",
+          "start_time": "16:00:00",
+          "end_time": "17:30:00",
+          "details": "リラックスのためのゲーム。"
+        },
+        {
+          "title": "夕食準備",
+          "start_time": "18:00:00",
+          "end_time": "18:30:00",
+          "details": "夕食を準備: 手作りピザ。"
+        },
+        {
+          "title": "夕食",
+          "start_time": "18:30:00",
+          "end_time": "19:00:00",
+          "details": "夕食を楽しむ。"
+        },
+        {
+          "title": "入浴",
+          "start_time": "20:00:00",
+          "end_time": "20:30:00",
+          "details": "リラックスのために入浴。"
+        },
+        {
+          "title": "力学の勉強",
+          "start_time": "21:00:00",
+          "end_time": "22:00:00",
+          "details": "力学の勉強を続ける。"
         }
       ]
     },
     {
-      "day_of_week": "Friday",
+      "day_of_week": "日曜日",
       "tasks": [
         {
-          "title": "Weekly Wrap-up",
-          "start_time": "2:14:30",
-          "end_time": "4:00:00",
-          "details": "Summarize the week's accomplishments and plan for next week."
-        }
-      ]
-    },
-    {
-      "day_of_week": "Saturday",
-      "tasks": [
+          "title": "朝の運動",
+          "start_time": "05:30:00",
+          "end_time": "06:05:00",
+          "details": "軽いヨガ。"
+        },
         {
-          "title": "Default Task",
-          "start_time": "00:00:00",
-          "end_time": "01:00:00",
-          "details": "This is a default task."
+          "title": "朝食準備",
+          "start_time": "07:00:00",
+          "end_time": "07:30:00",
+          "details": "朝食を準備: スムージーとトースト。"
+        },
+        {
+          "title": "朝食",
+          "start_time": "07:30:00",
+          "end_time": "08:00:00",
+          "details": "朝食を楽しむ。"
+        },
+        {
+          "title": "買い物",
+          "start_time": "09:00:00",
+          "end_time": "10:30:00",
+          "details": "必要なものを買いに行く。"
+        },
+        {
+          "title": "Rustプログラミングの勉強",
+          "start_time": "11:00:00",
+          "end_time": "13:00:00",
+          "details": "Rustの学習を続ける。"
+        },
+        {
+          "title": "昼食準備",
+          "start_time": "12:30:00",
+          "end_time": "13:00:00",
+          "details": "昼食を準備: チキンサラダ。"
+        },
+        {
+          "title": "昼食",
+          "start_time": "13:00:00",
+          "end_time": "13:30:00",
+          "details": "昼食を楽しむ。"
+        },
+        {
+          "title": "昇進試験の勉強",
+          "start_time": "14:00:00",
+          "end_time": "16:00:00",
+          "details": "昇進試験の勉強。"
+        },
+        {
+          "title": "ゲーム休憩",
+          "start_time": "16:00:00",
+          "end_time": "17:30:00",
+          "details": "リラックスのためのゲーム。"
+        },
+        {
+          "title": "夕食準備",
+          "start_time": "18:00:00",
+          "end_time": "18:30:00",
+          "details": "夕食を準備: スパゲッティとミートボール。"
+        },
+        {
+          "title": "夕食",
+          "start_time": "18:30:00",
+          "end_time": "19:00:00",
+          "details": "夕食を楽しむ。"
+        },
+        {
+          "title": "入浴",
+          "start_time": "20:00:00",
+          "end_time": "20:30:00",
+          "details": "リラックスのために入浴。"
+        },
+        {
+          "title": "力学の勉強",
+          "start_time": "21:00:00",
+          "end_time": "22:00:00",
+          "details": "力学のトピックを復習。"
         }
       ]
-    },
-    {
-      "day_of_week": "Sunday",
-      "tasks": []
     }
   ]
 }
