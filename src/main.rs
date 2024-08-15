@@ -16,6 +16,18 @@ async fn main() -> std::io::Result<()> {
         application_controller.load_schedule().await?;
     }
 
+    let file_observer_handle = {
+        let application_controller = application_controller.clone();
+        task::spawn(async move {
+            application_controller
+                .lock()
+                .await
+                .start_observer()
+                .await
+                .unwrap()
+        })
+    };
+
     let application_loop_handle = {
         let application_controller = application_controller.clone();
         task::spawn(async move { application_controller.async_loop().await })
@@ -76,6 +88,7 @@ async fn main() -> std::io::Result<()> {
             .expect("Failed to shutdown system tray");
     });
 
+    file_observer_handle.await;
     application_loop_handle.await;
     opening_viewer_handle.await;
 

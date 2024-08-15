@@ -29,6 +29,6 @@ mod tests {
             tasks: vec![],
         };
 
-        assert_eq!(day.get_day_of_week(), "Monday");
+        assert_eq!(day.get_day_of_week(), "Moday");
     }
 }

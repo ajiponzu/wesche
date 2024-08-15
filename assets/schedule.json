@@ -8,12 +8,6 @@
           "start_time": "09:00:00",
           "end_time": "10:00:00",
           "details": "Discuss project updates and next steps."
-        },
-        {
-          "title": "Code Review",
-          "start_time": "11:00:00",
-          "end_time": "12:00:00",
-          "details": "Review pull requests in the main repository."
         }
       ]
     },
@@ -55,8 +49,8 @@
       "tasks": [
         {
           "title": "Weekly Wrap-up",
-          "start_time": "22:33:30",
-          "end_time": "23:00:00",
+          "start_time": "2:14:30",
+          "end_time": "4:00:00",
           "details": "Summarize the week's accomplishments and plan for next week."
         }
       ]

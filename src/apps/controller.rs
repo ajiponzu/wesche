@@ -3,15 +3,17 @@ use super::core::schedule::Schedule;
 use super::core::task;
 use super::view::window;
 
+use async_std::channel::{Receiver, Sender};
 use async_std::fs::File;
 use async_std::path::Path;
 use async_std::prelude::*;
 use async_std::sync::Mutex;
 use chrono::{Datelike, Local};
+use notify::{Config, Event, RecommendedWatcher, RecursiveMode, Watcher};
 use notify_rust::Notification;
-use std::env;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
+use std::{env, thread};
 
 const SCHEDULE_FILE_PATH: &str = if cfg!(test) {
     "assets/tests/schedule.json"
@@ -35,40 +37,107 @@ fn read_project_root_path() -> String {
     }
 }
 
+struct FileObserver {
+    changed_sender: Sender<String>,
+    pub changed_receiver: Receiver<String>,
+    file_path: String,
+}
+
 pub struct Application {
-    schedule: schedule::Schedule,
+    file_observer: FileObserver,
+    schedule: Arc<Mutex<schedule::Schedule>>,
     finished_task_map: std::collections::HashMap<usize, AtomicBool>,
     is_shutdown: AtomicBool,
     is_opened_viewer: AtomicBool,
 }
 
+impl FileObserver {
+    pub fn new() -> FileObserver {
+        let (changed_sender, changed_receiver) = async_std::channel::bounded(1);
+
+        FileObserver {
+            changed_sender,
+            changed_receiver,
+            file_path: "".to_string(),
+        }
+    }
+
+    pub fn set_file_path(&mut self, file_path: &str) {
+        self.file_path = file_path.to_string();
+    }
+
+    pub fn get_file_path(&self) -> &str {
+        self.file_path.as_str()
+    }
+
+    pub async fn observe_file(&self) -> std::io::Result<()> {
+        let file_path = Arc::new(std::path::PathBuf::from(&self.file_path));
+        let file_path_buf = file_path.to_path_buf();
+        let tx = self.changed_sender.clone();
+
+        thread::spawn(move || {
+            let mut watcher = RecommendedWatcher::new(
+                move |res: notify::Result<Event>| {
+                    if let Ok(event) = res {
+                        if event.paths.contains(&file_path_buf) {
+                            let _ = tx.try_send("".to_string());
+                        }
+                    }
+                },
+                Config::default(),
+            )
+            .unwrap();
+
+            watcher
+                .watch(&file_path, RecursiveMode::NonRecursive)
+                .unwrap();
+
+            loop {
+                std::thread::park();
+            }
+        });
+
+        Ok(())
+    }
+}
+
 impl Application {
     pub fn new() -> Application {
         Application {
-            schedule: Schedule::new(),
+            file_observer: FileObserver::new(),
+            schedule: Arc::new(Mutex::new(Schedule::new())),
             finished_task_map: std::collections::HashMap::new(),
             is_shutdown: AtomicBool::new(false),
             is_opened_viewer: AtomicBool::new(false),
         }
     }
 
-    pub fn get_schedule(self: &Application) -> &Schedule {
-        &self.schedule
+    pub fn get_schedule(self: &Application) -> Arc<Mutex<Schedule>> {
+        self.schedule.clone()
     }
 
     pub async fn load_schedule(self: &mut Application) -> std::io::Result<()> {
         let project_root_path = read_project_root_path();
 
         let file_path = Path::new(&project_root_path).join(SCHEDULE_FILE_PATH);
+        self.file_observer
+            .set_file_path(file_path.to_str().unwrap());
         let mut file = File::open(file_path).await?;
 
         let mut contents = String::new();
 
         file.read_to_string(&mut contents).await?;
 
-        self.schedule = serde_json::from_str(&contents)?;
+        {
+            let mut schedule = self.schedule.lock().await;
+            *schedule = serde_json::from_str(&contents)?;
+        }
 
         Ok(())
+    }
+
+    pub async fn start_observer(self: &mut Application) -> std::io::Result<()> {
+        self.file_observer.observe_file().await
     }
 
     pub fn check_shutdown(self: &Application) -> bool {
@@ -99,7 +168,39 @@ impl Application {
             .to_string()
     }
 
-    pub fn check_notifications(self: &mut Application) {
+    pub async fn update_contents(&mut self) {
+        match async_std::future::timeout(
+            std::time::Duration::from_millis(NOTIFICATION_CHECK_INTERVAL.into()),
+            self.file_observer.changed_receiver.recv(),
+        )
+        .await
+        {
+            Ok(Ok(_)) => {
+                if let Ok(contents) =
+                    async_std::fs::read_to_string(self.file_observer.get_file_path()).await
+                {
+                    if cfg!(debug_assertions) {
+                        dbg!(&contents);
+                    }
+                    let mut schedule = self.schedule.lock().await;
+                    *schedule = match serde_json::from_str(&contents) {
+                        Ok(contents) => contents,
+                        _ => {
+                            dbg!("Failed to parse schedule file");
+                            Schedule::new()
+                        }
+                    };
+                }
+            }
+            Ok(Err(_)) => {
+                dbg!("Failed to receive file change event");
+                std::process::exit(-1);
+            }
+            Err(_) => (),
+        }
+    }
+
+    pub async fn check_notifications(self: &mut Application) {
         let (current_time, current_day_of_week_string) = {
             let current_chrono = Local::now();
             let current_time = current_chrono.time();
@@ -118,7 +219,7 @@ impl Application {
             (current_time, current_day_of_week_string)
         };
 
-        for day in self.schedule.get_days() {
+        for day in self.schedule.lock().await.get_days() {
             if day.get_day_of_week() != current_day_of_week_string {
                 if cfg!(debug_assertions) {
                     dbg!(day.get_day_of_week());
@@ -197,12 +298,9 @@ impl AsyncLoopInterface for Arc<Mutex<Application>> {
                 return;
             }
 
-            async_std::task::sleep(std::time::Duration::from_millis(
-                NOTIFICATION_CHECK_INTERVAL.into(),
-            ))
-            .await;
+            self.lock().await.update_contents().await;
 
-            self.lock().await.check_notifications();
+            self.lock().await.check_notifications().await;
         }
     }
 
@@ -223,7 +321,15 @@ impl AsyncLoopInterface for Arc<Mutex<Application>> {
             {
                 static WINDOW_TITLE: &str = "weshce -- schedule viewer";
 
-                let schedule_clone = self.lock().await.get_schedule().clone();
+                let schedule_clone = {
+                    self.lock()
+                        .await
+                        .get_schedule()
+                        .clone()
+                        .lock()
+                        .await
+                        .clone()
+                };
                 window::open_window(WINDOW_TITLE, schedule_clone);
             }
 
@@ -237,28 +343,28 @@ mod tests {
     use super::*;
 
     #[async_std::test]
-    async fn test_load_schedule() -> std::io::Result<()> {
-        let mut engine = Application::new();
+    async fn test_load_schedule() {
+        let mut app = Application::new();
 
-        engine.load_schedule().await?;
+        app.load_schedule().await.unwrap();
 
-        assert_ne!(engine.schedule.get_days().len(), 0);
+        app.check_notifications().await;
 
-        assert_eq!(engine.schedule.get_days()[0].get_day_of_week(), "Monday");
-        assert_eq!(engine.schedule.get_days()[1].get_day_of_week(), "Tuesday");
-        assert_eq!(engine.schedule.get_days()[2].get_day_of_week(), "Wednesday");
-        assert_eq!(engine.schedule.get_days()[3].get_day_of_week(), "Thursday");
-        assert_eq!(engine.schedule.get_days()[4].get_day_of_week(), "Friday");
-        assert_eq!(engine.schedule.get_days()[5].get_day_of_week(), "Saturday");
-        assert_eq!(engine.schedule.get_days()[6].get_day_of_week(), "Sunday");
+        let schedule = app.get_schedule().lock().await.clone();
+
+        assert_ne!(schedule.get_days().len(), 0);
+
+        assert_eq!(schedule.get_days()[0].get_day_of_week(), "Monday");
+        assert_eq!(schedule.get_days()[1].get_day_of_week(), "Tuesday");
+        assert_eq!(schedule.get_days()[2].get_day_of_week(), "Wednesday");
+        assert_eq!(schedule.get_days()[3].get_day_of_week(), "Thursday");
+        assert_eq!(schedule.get_days()[4].get_day_of_week(), "Friday");
+        assert_eq!(schedule.get_days()[5].get_day_of_week(), "Saturday");
+        assert_eq!(schedule.get_days()[6].get_day_of_week(), "Sunday");
 
         assert_eq!(
-            engine.schedule.get_days()[0].get_tasks()[0].get_title(),
+            schedule.get_days()[0].get_tasks()[0].get_title(),
             "Team Meeting"
         );
-
-        engine.check_notifications();
-
-        Ok(())
     }
 }
