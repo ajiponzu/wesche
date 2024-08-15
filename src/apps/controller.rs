@@ -222,10 +222,9 @@ impl AsyncLoopInterface for Arc<Mutex<Application>> {
 
             {
                 static WINDOW_TITLE: &str = "weshce -- schedule viewer";
-                static WINDOW_SIZE: (f64, f64) = (800.0, 600.0);
 
                 let schedule_clone = self.lock().await.get_schedule().clone();
-                window::open_window(WINDOW_TITLE, WINDOW_SIZE, schedule_clone);
+                window::open_window(WINDOW_TITLE, schedule_clone);
             }
 
             self.lock().await.close_viewer();

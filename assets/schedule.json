@@ -74,14 +74,7 @@
     },
     {
       "day_of_week": "Sunday",
-      "tasks": [
-        {
-          "title": "Default Task",
-          "start_time": "00:00:00",
-          "end_time": "01:00:00",
-          "details": "This is a default task."
-        }
-      ]
+      "tasks": []
     }
   ]
 }
