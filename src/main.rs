@@ -1,5 +1,5 @@
-#![windows_subsystem = "windows"]
-use std::sync::Arc;
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+use std::{env, sync::Arc};
 
 use async_std::sync::Mutex;
 use async_std::task;
@@ -9,6 +9,21 @@ use apps::controller::{self, AsyncLoopInterface};
 
 #[async_std::main]
 async fn main() -> std::io::Result<()> {
+    if env::var("RUNNING_WITH_CARGO").is_ok() {
+        if cfg!(debug_assertions) {
+            dbg!("Running with Cargo");
+        }
+        env::set_var("PROJECT_ROOT", env::var("CARGO_MANIFEST_DIR").unwrap());
+    } else {
+        if cfg!(debug_assertions) {
+            dbg!("Running directly");
+        }
+        env::set_var(
+            "PROJECT_ROOT",
+            env::current_dir().unwrap().to_str().unwrap(),
+        );
+    }
+
     let application_controller = Arc::new(Mutex::new(controller::Application::new()));
 
     {
